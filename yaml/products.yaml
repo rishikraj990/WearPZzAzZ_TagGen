@@ -1,0 +1,35 @@
+sections:
+  - name: "Section 1"
+    items:
+      - itemName: "Men"
+        tagName: "men"
+      - itemName: "Women"
+        tagName: "women"
+      - itemName: "Boy"
+        tagName: "boy"
+      - itemName: "Girl"
+        tagName: "girl"
+
+  - name: "Section 2"
+    relevantTo: ["Men", "Women"]
+    items:
+      - itemName: "Shirt"
+        tagName: "shirt"
+      - itemName: "Pants"
+        tagName: "pants"
+
+  - name: "Section 3"
+    relevantTo: ["Boy"]
+    items:
+      - itemName: "Toy"
+        tagName: "toy"
+      - itemName: "Shoes"
+        tagName: "shoes"
+
+  - name: "Section 4"
+    isIndependent: true
+    items:
+      - itemName: "Item 1"
+        tagName: "item1"
+      - itemName: "Item 2"
+        tagName: "item2"
