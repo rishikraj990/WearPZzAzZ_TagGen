@@ -67,17 +67,11 @@ function toggleSelection(itemName) {
 }
 
 function isPreviousButtonPossible() {
-    if (currentSectionIndex > 0) {
-        return true;
-    }
-    return false;
+    return currentSectionIndex > 0;
 }
 
 function isNextButtonPossible() {
-    if (currentSectionIndex < sections.length - 1) {
-        return true;
-    }
-    return false;
+    return currentSectionIndex < sections.length - 1;
 }
 
 function submitSelection() {
@@ -86,18 +80,19 @@ function submitSelection() {
         return section ? section.items.find(it => it.itemName === item).tagName : '';
     }).filter(tag => tag !== '');
 
-    document.getElementById('selectedTags').textContent = selectedTags.join(', ');
+    // Show selected tags below submit button
+    const selectedTagsElement = document.getElementById('selectedTags');
+    selectedTagsElement.textContent = selectedTags.join(', ');
+
+    // Show copy button after tags are displayed
+    const copyTagsBtn = document.getElementById('copyTagsBtn');
+    copyTagsBtn.classList.remove('d-none');
 }
 
 function copyTags() {
     const tags = document.getElementById('selectedTags').textContent;
     navigator.clipboard.writeText(tags).then(() => alert('Tags copied to clipboard!'));
 }
-
-window.onload = loadYAML;
-
-const prevBtn = document.getElementById('prevBtn');
-const nextBtn = document.getElementById('nextBtn');
 
 function updateNavigationButtons() {
     if (currentSectionIndex === 0) {
@@ -108,8 +103,12 @@ function updateNavigationButtons() {
 
     if (currentSectionIndex === sections.length - 1) {
         nextBtn.classList.add('d-none');
+        // Show the submit button only on the last section
+        document.getElementById('submitBtn').classList.remove('d-none');
     } else {
         nextBtn.classList.remove('d-none');
+        // Hide the submit button when not on the last section
+        document.getElementById('submitBtn').classList.add('d-none');
     }
 }
 
