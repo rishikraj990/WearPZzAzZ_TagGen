@@ -1,5 +1,13 @@
 sections:
+  - name: "Section 0"
+    items:
+      - itemName: "Clothing"
+        tagName: "clothing"
+      - itemName: "Electronics"
+        tagName: "electronics"
+
   - name: "Section 1"
+    relevantTo: ["Clothing"]
     items:
       - itemName: "Men"
         tagName: "men"
@@ -26,10 +34,10 @@ sections:
       - itemName: "Shoes"
         tagName: "shoes"
 
-  - name: "Section 4"
+  - name: "Color"
     isIndependent: true
     items:
-      - itemName: "Item 1"
-        tagName: "item1"
-      - itemName: "Item 2"
-        tagName: "item2"
+      - itemName: "White"
+        tagName: "white"
+      - itemName: "Black"
+        tagName: "black"
