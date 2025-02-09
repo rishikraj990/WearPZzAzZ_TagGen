@@ -1,6 +1,9 @@
 let sections = [];
 let selectedItems = new Set();
+let tag = new Set();
 let currentSectionIndex = 0; // Track the current section index
+let sectionSelections = []; // Track selected items in each section
+let finalTagList = [];
 
 // Load the YAML file and parse the sections
 async function loadYAML() {
@@ -8,6 +11,7 @@ async function loadYAML() {
     const yamlText = await response.text();
     const data = jsyaml.load(yamlText);
     sections = data.sections;
+    sectionSelections = new Array(sections.length).fill(false); // Track if any section has selection
     renderAllSections(); // Render all sections on load
 }
 
@@ -16,13 +20,20 @@ function renderAllSections() {
     const container = document.getElementById('formContainer');
     container.innerHTML = ''; // Clear the container
 
-    debugger
+    // debugger
     // Render each section as a separate card
     sections.forEach((section, index) => {
         renderSection(section, index);
     });
 
-    debugger
+    // debugger
+    // // Add Submit button at the end of all sections
+    addSubmitButton();
+
+    // debugger
+    // Enable/Disable the Submit button based on selection status
+    checkSubmitButtonStatus();
+
     // Expand only the first card automatically
     // expandSection(0);
     
@@ -32,7 +43,7 @@ function renderAllSections() {
 
 // Render a single section inside its own card box
 function renderSection(section, index) {
-    debugger
+    // debugger
     const container = document.getElementById('formContainer');
 
     // Create the card for each section
@@ -60,9 +71,9 @@ function renderSection(section, index) {
 
     
 
-    debugger
+    // debugger
     section.items.forEach(item => {
-        debugger
+        // debugger
         const formCheck = document.createElement('div');
         formCheck.className = 'form-check';
 
@@ -72,7 +83,7 @@ function renderSection(section, index) {
         input.value = item.tagName;
         input.id = item.tagName;
         input.checked = selectedItems.has(item.itemName);
-        input.onclick = () => handleCheckboxChange(item.itemName);
+        input.onclick = () => handleCheckboxChange(item.itemName, item.tagName, index);
 
         const label = document.createElement('label');
         label.className = 'form-check-label';
@@ -83,7 +94,7 @@ function renderSection(section, index) {
         formCheck.appendChild(label);
         cardBody.appendChild(formCheck);
     });
-    debugger
+    // debugger
 
     sectionCard.appendChild(cardBody);
 
@@ -114,16 +125,55 @@ function renderSection(section, index) {
     }
 }
 
-// Toggle collapse/expand of a section's body
-function toggleCollapse(index) {
-    const body = document.getElementById(`section-body-${index}`);
-    const isCollapsed = body.style.display === 'none';
-
-    if (isCollapsed) {
-        body.style.display = 'block';
+// Handle checkbox changes
+function handleCheckboxChange(itemName, tagName, sectionIndex) {
+    // Toggle item selection
+    debugger
+    if (selectedItems.has(itemName)) {
+        selectedItems.delete(itemName);
+        tag.delete(tagName);
     } else {
-        body.style.display = 'none';
+        selectedItems.add(itemName);
+        tag.add(tagName);
     }
+
+    // Mark section as selected if any checkbox is selected
+    sectionSelections[sectionIndex] = Array.from(document.querySelectorAll(`#section-body-${sectionIndex} input:checked`)).length > 0;
+
+    // Check the status of the Submit button after each change
+    checkSubmitButtonStatus();
+
+    // Re-render the sections based on new selections
+    renderAllSections();
+}
+
+// Check if Submit button should be enabled or not
+function checkSubmitButtonStatus() {
+    const submitBtn = document.getElementById('submitBtn');
+    // If all sections have at least one selected checkbox, enable Submit
+    const allSectionsSelected = sectionSelections.every(selected => selected);
+    submitBtn.disabled = !allSectionsSelected;
+}
+
+// Submit function (collect selected items)
+function submitSelection() {
+    finalTagList = [];
+    finalTagList = Array.from(tag).join(', ');
+    document.getElementById('selectedTags').textContent = `Selected Tags: ${finalTagList}`;
+
+    // Show the "Copy Tags" button
+    document.getElementById('copyTagsBtn').classList.remove('d-none');
+}
+
+// Copy selected tags to clipboard
+function copyTags() {
+    navigator.clipboard.writeText(finalTagList)
+        .then(() => {
+            alert('Tags copied to clipboard!');
+        })
+        .catch(err => {
+            alert('Error copying tags to clipboard: ' + err);
+        });
 }
 
 // Expand a specific section
@@ -139,21 +189,9 @@ function collapseSection(index) {
     body.style.display = 'none'; // Make the body hidden
 }
 
-// Handle checkbox changes
-function handleCheckboxChange(itemName) {
-    if (selectedItems.has(itemName)) {
-        selectedItems.delete(itemName);
-    } else {
-        selectedItems.add(itemName);
-    }
-
-    // Re-render the sections based on new selections
-    renderAllSections();
-}
-
 // Navigate to a specific section
 function navigateToSection(currentIndex, index) {
-    debugger
+    // debugger
     if (index >= 0 && index < sections.length) {
         // Collapse the current section
         collapseSection(currentSectionIndex);
@@ -172,6 +210,18 @@ function navigateToSection(currentIndex, index) {
         // if (currentSectionIndex - 1 >= 0) {
         //     expandSection(currentSectionIndex - 1);
         // }
+    }
+}
+
+// Toggle collapse/expand of a section's body
+function toggleCollapse(index) {
+    const body = document.getElementById(`section-body-${index}`);
+    const isCollapsed = body.style.display === 'none';
+
+    if (isCollapsed) {
+        body.style.display = 'block';
+    } else {
+        body.style.display = 'none';
     }
 }
 
