@@ -1,0 +1,43 @@
+sections:
+  - name: "Section 0"
+    items:
+      - itemName: "Clothing"
+        tagName: "clothing"
+      - itemName: "Electronics"
+        tagName: "electronics"
+
+  - name: "Section 1"
+    relevantTo: ["Clothing"]
+    items:
+      - itemName: "Men"
+        tagName: "men"
+      - itemName: "Women"
+        tagName: "women"
+      - itemName: "Boy"
+        tagName: "boy"
+      - itemName: "Girl"
+        tagName: "girl"
+
+  - name: "Section 2"
+    relevantTo: ["Men", "Women"]
+    items:
+      - itemName: "Shirt"
+        tagName: "shirt"
+      - itemName: "Pants"
+        tagName: "pants"
+
+  - name: "Section 3"
+    relevantTo: ["Boy"]
+    items:
+      - itemName: "Toy"
+        tagName: "toy"
+      - itemName: "Shoes"
+        tagName: "shoes"
+
+  - name: "Color"
+    isIndependent: true
+    items:
+      - itemName: "White"
+        tagName: "white"
+      - itemName: "Black"
+        tagName: "black"
